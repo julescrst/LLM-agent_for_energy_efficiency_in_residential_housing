@@ -143,10 +143,7 @@ def main():
         # Site ID Selection
         st.subheader("Site Selection")
         
-        ## Show available sites
-        #available_sites = get_available_sites()
-        #if available_sites:
-        #    st.info(f"📊 {len(available_sites)} sites available")
+        
         
         # Site ID input
         site_id = st.text_input(
@@ -193,19 +190,6 @@ def main():
         # Welcome screen
         st.info("👈 Please enter a Site ID in the sidebar to begin analysis")
         
-        # Show example queries
-        #st.subheader("Example Questions You Can Ask:")
-        #st.markdown("""
-        #- What are the main energy consumption patterns for this household?
-        #- When does this household use the most energy?
-        #- What recommendations do you have to reduce energy costs?
-        #- Are there any unusual spikes or anomalies in the usage data?
-        #- How does weekend usage compare to weekday usage?
-        #""")
-        
-        ##if available_sites:
-        #    st.subheader("Available Sites:")
-        #    st.write(", ".join(available_sites[:20]) + ("..." if len(available_sites) > 20 else ""))
     
     else:
         # Display data for loaded site
@@ -243,12 +227,6 @@ def main():
                         with st.spinner("Analyzing energy data..."):
                             response = query_claude(data, initial_question, st.session_state.current_site_id)
                             
-                            #if response:
-                            #    # Add assistant response to history
-                            #    st.session_state.conversation_history.append({
-                            #        "role": "assistant",
-                            #        "content": response
-                            #    })
             
             # Chat interface
             st.markdown("### Ask Questions About This Site's Energy Usage")
