@@ -30,9 +30,9 @@ if 'initial_analysis_pending' not in st.session_state:
     st.session_state.initial_analysis_pending = False
 
 # Configuration
-JSON_DATA_PATH = ""  # Adjust this path to your JSON directory
+JSON_DATA_PATH = "processed_JSON"  
 
-ANTHROPIC_API_KEY = ANTHROPIC_API_KEY = st.secrets["ANTHROPIC_API_KEY"] if "ANTHROPIC_API_KEY" in st.secrets else os.getenv("ANTHROPIC_API_KEY")
+ANTHROPIC_API_KEY  = st.secrets["ANTHROPIC_API_KEY"] if "ANTHROPIC_API_KEY" in st.secrets else os.getenv("ANTHROPIC_API_KEY")
 
 # Helper Functions
 @st.cache_data
@@ -96,7 +96,7 @@ Response:"""
         # Stream the response
         response_container = st.empty()
         full_response = ""
-        
+
         with client.messages.stream(
             model="claude-sonnet-4-20250514",
             max_tokens=2000,
@@ -105,40 +105,15 @@ Response:"""
             for text in stream.text_stream:
                 full_response += text
                 response_container.markdown(full_response + "▌")
-        
+
         response_container.markdown(full_response)
         return full_response
-        
+
     except Exception as e:
         st.error(f"Error querying Claude API: {str(e)}")
         return None
 
-#def display_summary_cards(data):
-#    """Display key metrics as cards"""
-#    cols = st.columns(4)
-#    
-#    # Try to extract common metrics (adjust based on your JSON structure)
-#    metrics = {
-#        "Total Consumption": None,
-#        "Average Daily Usage": None,
-#        "Total Cost": None,
-#        "Peak Usage": None
-#    }
-#    
-#    # You'll need to adjust these based on your actual JSON structure
-#    if isinstance(data, dict):
-#        if "total_consumption" in data:
-#            metrics["Total Consumption"] = f"{data['total_consumption']} kWh"
-#        if "average_daily_usage" in data:
-#            metrics["Average Daily Usage"] = f"{data['average_daily_usage']} kWh"
-#        if "total_cost" in data:
-#            metrics["Total Cost"] = f"${data['total_cost']:.2f}"
-#        if "peak_usage" in data:
-#            metrics["Peak Usage"] = f"{data['peak_usage']} kWh"
-#    
-#    for col, (label, value) in zip(cols, metrics.items()):
-#        with col:
-#            st.metric(label=label, value=value if value else "N/A")
+
 
 # Main App
 def main():
@@ -168,10 +143,10 @@ def main():
         # Site ID Selection
         st.subheader("Site Selection")
         
-        # Show available sites
-        available_sites = get_available_sites()
-        if available_sites:
-            st.info(f"📊 {len(available_sites)} sites available")
+        ## Show available sites
+        #available_sites = get_available_sites()
+        #if available_sites:
+        #    st.info(f"📊 {len(available_sites)} sites available")
         
         # Site ID input
         site_id = st.text_input(
@@ -228,9 +203,9 @@ def main():
         #- How does weekend usage compare to weekday usage?
         #""")
         
-        if available_sites:
-            st.subheader("Available Sites:")
-            st.write(", ".join(available_sites[:20]) + ("..." if len(available_sites) > 20 else ""))
+        ##if available_sites:
+        #    st.subheader("Available Sites:")
+        #    st.write(", ".join(available_sites[:20]) + ("..." if len(available_sites) > 20 else ""))
     
     else:
         # Display data for loaded site
@@ -255,10 +230,10 @@ def main():
                     initial_question = "Please provide a comprehensive analysis of this household's energy usage data, including key insights, patterns, anomalies, and actionable recommendations to improve energy efficiency and reduce costs."
                     
                     # Add to conversation history
-                    st.session_state.conversation_history.append({
-                        "role": "user",
-                        "content": "📊 Initial Analysis Request"
-                    })
+                    #st.session_state.conversation_history.append({
+                    #    "role": "user",
+                    #    "content": "📊 Initial Analysis Request"
+                    #})
                     
                     # Display the automatic analysis
                     with st.chat_message("user"):
@@ -268,12 +243,12 @@ def main():
                         with st.spinner("Analyzing energy data..."):
                             response = query_claude(data, initial_question, st.session_state.current_site_id)
                             
-                            if response:
-                                # Add assistant response to history
-                                st.session_state.conversation_history.append({
-                                    "role": "assistant",
-                                    "content": response
-                                })
+                            #if response:
+                            #    # Add assistant response to history
+                            #    st.session_state.conversation_history.append({
+                            #        "role": "assistant",
+                            #        "content": response
+                            #    })
             
             # Chat interface
             st.markdown("### Ask Questions About This Site's Energy Usage")
