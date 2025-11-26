@@ -70,7 +70,7 @@ def get_available_sites():
     except:
         return []
 
-def query_claude(json_data, user_question, site_id):
+def query_claude(json_data, user_question, site_id,display= True):
     """Query Claude API with JSON data and user question"""
     try:
         client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
@@ -89,24 +89,31 @@ Please provide a clear, insightful analysis that:
 2. Highlights key patterns, trends, or anomalies in the data
 3. Offers actionable recommendations where relevant
 4. Uses specific numbers and data points from the JSON
-5. Keeps the response concise but comprehensive
+5. Keeps the response concise but comprehensive and user friendly.
 
 Response:"""
 
         # Stream the response
         response_container = st.empty()
         full_response = ""
+        if display: 
+            response_container = st.empty()  # Loading indicator
+            with client.messages.stream(
+                model="claude-sonnet-4-20250514",
+                max_tokens=2000,
+                messages=[{"role": "user", "content": prompt}]
+            ) as stream:
+                for text in stream.text_stream:
+                    full_response += text
+                    response_container.markdown(full_response + "▌")
 
-        with client.messages.stream(
-            model="claude-sonnet-4-20250514",
-            max_tokens=2000,
-            messages=[{"role": "user", "content": prompt}]
-        ) as stream:
-            for text in stream.text_stream:
-                full_response += text
-                response_container.markdown(full_response + "▌")
-
-        response_container.markdown(full_response)
+            response_container.markdown(full_response)
+        else: 
+             with client.messages.stream(model="claude-sonnet-4-20250514",
+        max_tokens=2000,
+        messages=[{"role": "user", "content": prompt}]) as stream:
+                for text in stream.text_stream:
+                    full_response += text
         return full_response
 
     except Exception as e:
@@ -204,6 +211,12 @@ def main():
             # Display summary cards
             #display_summary_cards(data)
             st.divider()
+
+
+            # Display conversation history
+            for message in st.session_state.conversation_history:
+                with st.chat_message(message["role"]):
+                    st.markdown(message["content"])
             
             # Generate initial analysis if pending
             if st.session_state.initial_analysis_pending:
@@ -219,22 +232,34 @@ def main():
                     #    "content": "📊 Initial Analysis Request"
                     #})
                     
-                    # Display the automatic analysis
-                    with st.chat_message("user"):
-                        st.markdown("📊 **Initial Analysis Request**")
+                    ## Display the automatic analysis
+                    #with st.chat_message("user"):
+                    #    st.markdown("📊 **Initial Analysis Request**")
                     
                     with st.chat_message("assistant"):
                         with st.spinner("Analyzing energy data..."):
-                            response = query_claude(data, initial_question, st.session_state.current_site_id)
+                            initial_response = query_claude(data, initial_question, st.session_state.current_site_id,display= True)
+
+                    #if response:
+                    #    st.session_state.conversation_history.append({
+                    #        "role": "assistant",
+                    #        "content": initial_response
+                    #})
+                    if initial_response:
+                        st.session_state.conversation_history.append({
+                                "role": "assistant",
+                                "content": initial_response
+                        })
                             
             
             # Chat interface
             st.markdown("### Ask Questions About This Site's Energy Usage")
-            
-            # Display conversation history
-            for message in st.session_state.conversation_history:
-                with st.chat_message(message["role"]):
-                    st.markdown(message["content"])
+
+
+            ## Display conversation history
+            #for message in st.session_state.conversation_history:
+            #    with st.chat_message(message["role"]):
+            #        st.markdown(message["content"])
             
             # User input
             user_question = st.chat_input("Ask a question about the energy data...")
@@ -255,7 +280,7 @@ def main():
                     
                     # Get AI response
                     with st.chat_message("assistant"):
-                        response = query_claude(data, user_question, st.session_state.current_site_id)
+                        response = query_claude(data, user_question, st.session_state.current_site_id,display= True )
                         
                         if response:
                             # Add assistant response to history
