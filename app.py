@@ -52,24 +52,6 @@ def load_json_file(site_id):
         st.error(f"Error loading file: {str(e)}")
         return None
 
-def get_available_sites():
-    """Get list of available site IDs from JSON directory"""
-    try:
-        json_path = Path(JSON_DATA_PATH)
-        if not json_path.exists():
-            return []
-        
-        files = list(json_path.glob("*.json"))
-        site_ids = []
-        for file in files:
-            # Extract site ID from filename
-            name = file.stem
-            site_id = name.replace("site_", "").replace("_", "")
-            site_ids.append(site_id)
-        return sorted(site_ids)
-    except:
-        return []
-
 def query_claude(json_data, user_question, site_id,display= True):
     """Query Claude API with JSON data and user question"""
     try:
@@ -133,7 +115,7 @@ def main():
     with st.sidebar:
         st.header("⚙️ Configuration")
         
-        # API Key input if not set in secrets
+        # Check if API key is set
         if not ANTHROPIC_API_KEY:
             api_key_input = st.text_input(
                 "Anthropic API Key",
@@ -156,7 +138,7 @@ def main():
         site_id = st.text_input(
             "Enter Site ID",
             value="",
-            placeholder="e.g., 001 or site_001",
+            placeholder="e.g., 1234",
             help="Enter the site ID to analyze"
         )
         
@@ -204,20 +186,26 @@ def main():
         
         # Create tabs
         tab1, tab2 = st.tabs(["🤖 AI Analysis", "💾 Raw JSON"])
+
+
+        # User question input chat box
+        user_question = st.chat_input("Ask a question about the energy data...")
+            
+        
         
         with tab1:
             st.subheader(f"AI-Powered Analysis for Site {st.session_state.current_site_id}")
             
-            # Display summary cards
-            #display_summary_cards(data)
+            
             st.divider()
 
-
+            
             # Display conversation history
             for message in st.session_state.conversation_history:
                 with st.chat_message(message["role"]):
                     st.markdown(message["content"])
             
+
             # Generate initial analysis if pending
             if st.session_state.initial_analysis_pending:
                 if ANTHROPIC_API_KEY:
@@ -226,25 +214,12 @@ def main():
                     # Create automatic initial analysis
                     initial_question = "Please provide a comprehensive analysis of this household's energy usage data, including key insights, patterns, anomalies, and actionable recommendations to improve energy efficiency and reduce costs."
                     
-                    # Add to conversation history
-                    #st.session_state.conversation_history.append({
-                    #    "role": "user",
-                    #    "content": "📊 Initial Analysis Request"
-                    #})
-                    
-                    ## Display the automatic analysis
-                    #with st.chat_message("user"):
-                    #    st.markdown("📊 **Initial Analysis Request**")
                     
                     with st.chat_message("assistant"):
                         with st.spinner("Analyzing energy data..."):
                             initial_response = query_claude(data, initial_question, st.session_state.current_site_id,display= True)
 
-                    #if response:
-                    #    st.session_state.conversation_history.append({
-                    #        "role": "assistant",
-                    #        "content": initial_response
-                    #})
+                    
                     if initial_response:
                         st.session_state.conversation_history.append({
                                 "role": "assistant",
@@ -256,13 +231,28 @@ def main():
             st.markdown("### Ask Questions About This Site's Energy Usage")
 
 
-            ## Display conversation history
-            #for message in st.session_state.conversation_history:
-            #    with st.chat_message(message["role"]):
-            #        st.markdown(message["content"])
-            
-            # User input
-            user_question = st.chat_input("Ask a question about the energy data...")
+            # Suggested questions after initial analysis
+            if len(st.session_state.conversation_history) == 1:
+                st.markdown("#### 💡 Suggested Questions:")
+                cols = st.columns(2)
+                suggestions = [
+                    "What are the key insights from this household's energy usage?",
+                    "When does this household consume the most energy?",
+                    "What are some recommendations to reduce energy costs?",
+                    "Are there any unusual patterns or anomalies?"
+                ]
+                
+                for idx, suggestion in enumerate(suggestions):
+                    col = cols[idx % 2]
+                    with col:
+                        if st.button(suggestion, key=f"suggestion_{idx}"):
+                            user_question = suggestion
+                            st.session_state.conversation_history.append({
+                                "role": "user",
+                                "content": suggestion
+                            })
+                            
+            # Handle user question
             
             if user_question:
                 if not ANTHROPIC_API_KEY:
@@ -289,26 +279,8 @@ def main():
                                 "content": response
                             })
             
-            # Suggested questions
-            if not st.session_state.conversation_history:
-                st.markdown("#### 💡 Suggested Questions:")
-                cols = st.columns(2)
-                suggestions = [
-                    "What are the key insights from this household's energy usage?",
-                    "When does this household consume the most energy?",
-                    "What are some recommendations to reduce energy costs?",
-                    "Are there any unusual patterns or anomalies?"
-                ]
-                
-                for idx, suggestion in enumerate(suggestions):
-                    col = cols[idx % 2]
-                    with col:
-                        if st.button(suggestion, key=f"suggestion_{idx}"):
-                            st.session_state.conversation_history.append({
-                                "role": "user",
-                                "content": suggestion
-                            })
-                            st.rerun()
+            
+            
         
         
         
@@ -323,7 +295,7 @@ def main():
             st.download_button(
                 label="📥 Download JSON",
                 data=json_str,
-                file_name=f"site_{st.session_state.current_site_id}_data.json",
+                file_name=f"site_{st.session_state.current_site_id}.json",
                 mime="application/json"
             )
     
