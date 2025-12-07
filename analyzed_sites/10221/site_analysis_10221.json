@@ -1,0 +1,439 @@
+{
+  "schema_version": "1.0",
+  "site": {
+    "site_id": "10221",
+    "state": "OR",
+    "units": {
+      "power": "kW",
+      "temp": "\u00b0C"
+    }
+  },
+  "site specific": {
+    "average seasonal load": {
+      "Fall": 0.5439674908424909,
+      "Spring": 0.5344868540344515,
+      "Summer": 0.31339447463768116,
+      "Winter": 0.9547861721611722
+    },
+    "current season": "Winter",
+    "days with most consumption in Winter ranked(in kWh)": [
+      {
+        "total_kWh": 8.599692307692308,
+        "day": "Sunday"
+      },
+      {
+        "total_kWh": 8.547999999999998,
+        "day": "Saturday"
+      },
+      {
+        "total_kWh": 7.844923076923076,
+        "day": "Wednesday"
+      },
+      {
+        "total_kWh": 7.5913076923076925,
+        "day": "Tuesday"
+      },
+      {
+        "total_kWh": 6.994846153846154,
+        "day": "Friday"
+      },
+      {
+        "total_kWh": 6.525923076923078,
+        "day": "Thursday"
+      },
+      {
+        "total_kWh": 6.466615384615385,
+        "day": "Monday"
+      }
+    ],
+    "Winter peak hours per day": [
+      {
+        "Day": "Monday",
+        "Peak Hour": 23,
+        "Peak Value (kW)": 0.6268461538461538,
+        "Average Load (kW)": 0.26944230769230765
+      },
+      {
+        "Day": "Tuesday",
+        "Peak Hour": 15,
+        "Peak Value (kW)": 0.5942307692307692,
+        "Average Load (kW)": 0.31630448717948717
+      },
+      {
+        "Day": "Wednesday",
+        "Peak Hour": 13,
+        "Peak Value (kW)": 0.6906923076923076,
+        "Average Load (kW)": 0.3268717948717949
+      },
+      {
+        "Day": "Thursday",
+        "Peak Hour": 19,
+        "Peak Value (kW)": 0.5366153846153846,
+        "Average Load (kW)": 0.2719134615384616
+      },
+      {
+        "Day": "Friday",
+        "Peak Hour": 22,
+        "Peak Value (kW)": 0.6653846153846155,
+        "Average Load (kW)": 0.2914519230769231
+      },
+      {
+        "Day": "Saturday",
+        "Peak Hour": 17,
+        "Peak Value (kW)": 1.038,
+        "Average Load (kW)": 0.3561666666666667
+      },
+      {
+        "Day": "Sunday",
+        "Peak Hour": 13,
+        "Peak Value (kW)": 0.906846153846154,
+        "Average Load (kW)": 0.35832051282051286
+      }
+    ],
+    "appliance correlation at peak hours": {
+      "total_kW": 1.0,
+      "Clothes Dryer": 0.7558101259399338,
+      "Instantaneous Water Heater (Elec)": 0.5064587800048022,
+      "Electric Furnace": 0.3359636496035721,
+      "Clothes Washer": 0.1279468444436208,
+      "Other": -0.6363345002726889,
+      "Dishwasher": null
+    },
+    "weekend vs weekday consumption during Winter": -0.06200690883190882,
+    "day vs night consumption ratio during Winter": 0.9235687380988784,
+    "temperature vs hvac regression": [
+      {
+        "Season": "Summer",
+        "Coefficient": -4.182308157108449e-06,
+        "Intercept": 0.004075589164459468,
+        "MSE": 6.14890751693024e-10,
+        "R-squared": 0.24755151966316835
+      },
+      {
+        "Season": "Winter",
+        "Coefficient": -0.10987496299775104,
+        "Intercept": 0.004075589164459468,
+        "MSE": 0.014320166450293648,
+        "R-squared": 0.9206060725311866
+      }
+    ],
+    "dewpoint vs hvac regression": [
+      {
+        "Parameter": "Coefficient",
+        "Value": 0.003188865559596289
+      },
+      {
+        "Parameter": "Intercept",
+        "Value": 2.3014208944572867
+      },
+      {
+        "Parameter": "MSE",
+        "Value": 0.4379032168826115
+      },
+      {
+        "Parameter": "R-squared",
+        "Value": 0.00038148810796234667
+      }
+    ]
+  },
+  "site comparison": {
+    "site characteristics": {
+      "avg_daily_load_kW": 0.5857812571168299,
+      "load_factor": 0.23861726257718177,
+      "hvac_fraction": 0.4437439970328502,
+      "day_vs_night_ratio": 0.853745503316816,
+      "seasonal_std": 0.267541656241551,
+      "weekend_vs_weekday_ratio": 2.2714388190000876,
+      "hvac/temperature regression summer coef": -4.182308157108449e-06,
+      "hvac/temperature regression winter coef": -0.10987496299775104,
+      "hvac regression summer R-squared": 0.24755151966316835,
+      "hvac regression winter R-squared": 0.9206060725311866
+    },
+    "cluster_comparison": [
+      {
+        "Feature": "avg_daily_load_kW",
+        "Your_Site": 0.586,
+        "Cluster_Center": 0.877,
+        "Difference": -0.292,
+        "Percent_Diff": -33.2
+      },
+      {
+        "Feature": "load_factor",
+        "Your_Site": 0.239,
+        "Cluster_Center": 0.311,
+        "Difference": -0.072,
+        "Percent_Diff": -23.2
+      },
+      {
+        "Feature": "hvac_fraction",
+        "Your_Site": 0.444,
+        "Cluster_Center": 0.318,
+        "Difference": 0.125,
+        "Percent_Diff": 39.4
+      },
+      {
+        "Feature": "day_vs_night_ratio",
+        "Your_Site": 0.854,
+        "Cluster_Center": 1.151,
+        "Difference": -0.297,
+        "Percent_Diff": -25.8
+      },
+      {
+        "Feature": "seasonal_std",
+        "Your_Site": 0.268,
+        "Cluster_Center": 0.223,
+        "Difference": 0.045,
+        "Percent_Diff": 20.2
+      },
+      {
+        "Feature": "weekend_vs_weekday_ratio",
+        "Your_Site": 2.271,
+        "Cluster_Center": 2.237,
+        "Difference": 0.034,
+        "Percent_Diff": 1.5
+      },
+      {
+        "Feature": "hvac/temperature regression summer coef",
+        "Your_Site": -0.0,
+        "Cluster_Center": 0.014,
+        "Difference": -0.014,
+        "Percent_Diff": -100.0
+      },
+      {
+        "Feature": "hvac/temperature regression winter coef",
+        "Your_Site": -0.11,
+        "Cluster_Center": -0.058,
+        "Difference": -0.052,
+        "Percent_Diff": 90.5
+      },
+      {
+        "Feature": "hvac regression summer R-squared",
+        "Your_Site": 0.248,
+        "Cluster_Center": 0.163,
+        "Difference": 0.084,
+        "Percent_Diff": 51.7
+      },
+      {
+        "Feature": "hvac regression winter R-squared",
+        "Your_Site": 0.921,
+        "Cluster_Center": 0.821,
+        "Difference": 0.099,
+        "Percent_Diff": 12.1
+      }
+    ],
+    "assigned cluster": 1,
+    "cluster centers": [
+      {
+        "Cluster": 0,
+        "avg_daily_load_kW_orig": 1.692,
+        "load_factor_orig": 0.469,
+        "hvac_fraction_orig": 0.278,
+        "day_vs_night_ratio_orig": 1.138,
+        "seasonal_std_orig": 0.458,
+        "weekend_vs_weekday_ratio_orig": 2.488,
+        "hvac/temperature regression summer coef_orig": 0.014,
+        "hvac/temperature regression winter coef_orig": -0.058,
+        "hvac regression summer R-squared_orig": 0.163,
+        "hvac regression winter R-squared_orig": 0.821,
+        "state_ID": 0.18,
+        "state_MT": 0.049,
+        "state_OR": 0.328,
+        "state_WA": 0.443
+      },
+      {
+        "Cluster": 1,
+        "avg_daily_load_kW_orig": 0.877,
+        "load_factor_orig": 0.311,
+        "hvac_fraction_orig": 0.318,
+        "day_vs_night_ratio_orig": 1.151,
+        "seasonal_std_orig": 0.223,
+        "weekend_vs_weekday_ratio_orig": 2.237,
+        "hvac/temperature regression summer coef_orig": 0.014,
+        "hvac/temperature regression winter coef_orig": -0.058,
+        "hvac regression summer R-squared_orig": 0.163,
+        "hvac regression winter R-squared_orig": 0.821,
+        "state_ID": 0.276,
+        "state_MT": 0.034,
+        "state_OR": 0.517,
+        "state_WA": 0.172
+      },
+      {
+        "Cluster": 2,
+        "avg_daily_load_kW_orig": 0.289,
+        "load_factor_orig": 0.111,
+        "hvac_fraction_orig": 1.574,
+        "day_vs_night_ratio_orig": -0.285,
+        "seasonal_std_orig": 0.692,
+        "weekend_vs_weekday_ratio_orig": 1.713,
+        "hvac/temperature regression summer coef_orig": 0.014,
+        "hvac/temperature regression winter coef_orig": -0.058,
+        "hvac regression summer R-squared_orig": 0.163,
+        "hvac regression winter R-squared_orig": 0.821,
+        "state_ID": 0.375,
+        "state_MT": 0.0,
+        "state_OR": 0.375,
+        "state_WA": 0.25
+      },
+      {
+        "Cluster": 3,
+        "avg_daily_load_kW_orig": 4.804,
+        "load_factor_orig": 0.442,
+        "hvac_fraction_orig": 0.267,
+        "day_vs_night_ratio_orig": 1.196,
+        "seasonal_std_orig": 2.061,
+        "weekend_vs_weekday_ratio_orig": 2.559,
+        "hvac/temperature regression summer coef_orig": 0.014,
+        "hvac/temperature regression winter coef_orig": -0.058,
+        "hvac regression summer R-squared_orig": 0.163,
+        "hvac regression winter R-squared_orig": 0.821,
+        "state_ID": 0.444,
+        "state_MT": 0.111,
+        "state_OR": 0.0,
+        "state_WA": 0.444
+      },
+      {
+        "Cluster": 4,
+        "avg_daily_load_kW_orig": 0.973,
+        "load_factor_orig": 0.312,
+        "hvac_fraction_orig": 0.358,
+        "day_vs_night_ratio_orig": 1.581,
+        "seasonal_std_orig": 0.317,
+        "weekend_vs_weekday_ratio_orig": 2.588,
+        "hvac/temperature regression summer coef_orig": 0.014,
+        "hvac/temperature regression winter coef_orig": -0.058,
+        "hvac regression summer R-squared_orig": 0.163,
+        "hvac regression winter R-squared_orig": 0.821,
+        "state_ID": 0.313,
+        "state_MT": 0.015,
+        "state_OR": 0.328,
+        "state_WA": 0.343
+      },
+      {
+        "Cluster": 5,
+        "avg_daily_load_kW_orig": 2.19,
+        "load_factor_orig": 0.385,
+        "hvac_fraction_orig": 0.464,
+        "day_vs_night_ratio_orig": 1.301,
+        "seasonal_std_orig": 1.072,
+        "weekend_vs_weekday_ratio_orig": 2.495,
+        "hvac/temperature regression summer coef_orig": 0.014,
+        "hvac/temperature regression winter coef_orig": -0.058,
+        "hvac regression summer R-squared_orig": 0.163,
+        "hvac regression winter R-squared_orig": 0.821,
+        "state_ID": 0.189,
+        "state_MT": 0.027,
+        "state_OR": 0.297,
+        "state_WA": 0.486
+      },
+      {
+        "Cluster": 6,
+        "avg_daily_load_kW_orig": -0.242,
+        "load_factor_orig": -0.158,
+        "hvac_fraction_orig": -1.371,
+        "day_vs_night_ratio_orig": -2.39,
+        "seasonal_std_orig": 0.692,
+        "weekend_vs_weekday_ratio_orig": 2.553,
+        "hvac/temperature regression summer coef_orig": 0.014,
+        "hvac/temperature regression winter coef_orig": -0.058,
+        "hvac regression summer R-squared_orig": 0.163,
+        "hvac regression winter R-squared_orig": 0.821,
+        "state_ID": 0.0,
+        "state_MT": 0.0,
+        "state_OR": 0.333,
+        "state_WA": 0.667
+      }
+    ],
+    "state comparison": [
+      {
+        "Feature": "avg_daily_load_kW",
+        "Your_Site": 0.586,
+        "State_Average": 1.206,
+        "Difference": -0.62,
+        "Percent_Diff": -51.4
+      },
+      {
+        "Feature": "load_factor",
+        "Your_Site": 0.239,
+        "State_Average": 0.337,
+        "Difference": -0.099,
+        "Percent_Diff": -29.3
+      },
+      {
+        "Feature": "hvac_fraction",
+        "Your_Site": 0.444,
+        "State_Average": 0.379,
+        "Difference": 0.064,
+        "Percent_Diff": 17.0
+      },
+      {
+        "Feature": "day_vs_night_ratio",
+        "Your_Site": 0.854,
+        "State_Average": 1.189,
+        "Difference": -0.336,
+        "Percent_Diff": -28.2
+      },
+      {
+        "Feature": "seasonal_std",
+        "Your_Site": 0.268,
+        "State_Average": 0.411,
+        "Difference": -0.143,
+        "Percent_Diff": -34.8
+      },
+      {
+        "Feature": "weekend_vs_weekday_ratio",
+        "Your_Site": 2.271,
+        "State_Average": 2.366,
+        "Difference": -0.094,
+        "Percent_Diff": -4.0
+      },
+      {
+        "Feature": "hvac/temperature regression summer coef",
+        "Your_Site": -0.0,
+        "State_Average": 0.014,
+        "Difference": -0.014,
+        "Percent_Diff": -100.0
+      },
+      {
+        "Feature": "hvac/temperature regression winter coef",
+        "Your_Site": -0.11,
+        "State_Average": -0.058,
+        "Difference": -0.052,
+        "Percent_Diff": 90.5
+      },
+      {
+        "Feature": "hvac regression summer R-squared",
+        "Your_Site": 0.248,
+        "State_Average": 0.163,
+        "Difference": 0.084,
+        "Percent_Diff": 51.7
+      },
+      {
+        "Feature": "hvac regression winter R-squared",
+        "Your_Site": 0.921,
+        "State_Average": 0.821,
+        "Difference": 0.099,
+        "Percent_Diff": 12.1
+      }
+    ]
+  },
+  "pipeline": {
+    "model_file": "kmeans_pipeline.joblib",
+    "k": 7,
+    "features_used": [
+      "avg_daily_load_kW",
+      "load_factor",
+      "hvac_fraction",
+      "day_vs_night_ratio",
+      "seasonal_std",
+      "weekend_vs_weekday_ratio",
+      "hvac/temperature regression summer coef",
+      "hvac/temperature regression winter coef",
+      "hvac regression summer R-squared",
+      "hvac regression winter R-squared",
+      "state"
+    ],
+    "w_state": 0.4,
+    "model_type": "KMeans",
+    "preprocessing": "StandardScaler + OneHotEncoder"
+  }
+}

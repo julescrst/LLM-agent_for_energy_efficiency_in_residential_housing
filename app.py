@@ -30,7 +30,9 @@ if 'initial_analysis_pending' not in st.session_state:
     st.session_state.initial_analysis_pending = False
 
 # Configuration
-JSON_DATA_PATH = "processed_JSON"  
+JSON_DATA_PATH = "analyzed_sites"  
+
+GRAPHIC_DATA_PATH = "analyzed_sites"  # Adjustis path to your JSON directory
 
 ANTHROPIC_API_KEY  = st.secrets["ANTHROPIC_API_KEY"] if "ANTHROPIC_API_KEY" in st.secrets else os.getenv("ANTHROPIC_API_KEY")
 
@@ -40,7 +42,7 @@ def load_json_file(site_id):
     """Load JSON file for a given site ID"""
     try:
         
-        filename = f"site_analysis_{site_id}.json"
+        filename = f"{site_id}/site_analysis_{site_id}.json"
         
         filepath = Path(JSON_DATA_PATH) / filename
         if filepath.exists():
@@ -185,7 +187,7 @@ def main():
         data = st.session_state.current_json_data
         
         # Create tabs
-        tab1, tab2 = st.tabs(["🤖 AI Analysis", "💾 Raw JSON"])
+        tab1, tab2, tab3 = st.tabs(["🤖 AI Analysis","📊 Energy Usage Graphs", "💾 Raw JSON"])
 
 
         # User question input chat box
@@ -280,11 +282,81 @@ def main():
                             })
             
             
-            
-        
-        
-        
         with tab2:
+            st.subheader("Energy Usage Graphs")
+            
+            # Display energy usage graphs
+            peak_hour_path = Path(GRAPHIC_DATA_PATH) / f"{st.session_state.current_site_id}/peak_hour_load_{st.session_state.current_site_id}.html"
+            if peak_hour_path.exists():
+                st.markdown("#### Peak Hour Load Graph") 
+                html_content = peak_hour_path.read_text()
+
+                 # Inject custom CSS for legend styling
+                custom_css = """
+                <style>
+                .legend text {
+                    font-size: 10px !important;
+                }
+                .legendtext {
+                    max-width: 150px !important;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis !important;
+                }
+                </style>
+                """
+                
+                # Inject CSS before closing </head> or at the start of <body>
+                if "</head>" in html_content:
+                    html_content = html_content.replace("</head>", f"{custom_css}</head>")
+                else:
+                    html_content = custom_css + html_content
+
+                st.components.v1.html(html_content, height=500,width=1200, scrolling=True)
+            else:
+                st.warning("Peak Hour Load graph not found.")
+
+            seasonal_variation_path = Path(GRAPHIC_DATA_PATH) / f"{st.session_state.current_site_id}/Seasonal_load_profile_{st.session_state.current_site_id}.html"
+            if seasonal_variation_path.exists():
+                st.markdown("#### Seasonal Variation Graph")
+
+
+                html_content = seasonal_variation_path.read_text()
+
+                 # Inject custom CSS for legend styling
+                custom_css = """
+                <style>
+                .legend text {
+                    font-size: 10px !important;
+                }
+                .legendtext {
+                    max-width: 150px !important;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis !important;
+                }
+                </style>
+                """
+                
+                # Inject CSS before closing </head> or at the start of <body>
+                if "</head>" in html_content:
+                    html_content = html_content.replace("</head>", f"{custom_css}</head>")
+                else:
+                    html_content = custom_css + html_content
+
+
+
+                st.components.v1.html(html_content, height=500, width=1200, scrolling=True)
+            else:
+                st.warning("Seasonal Variation graph not found.")
+
+            week_profile_path = Path(GRAPHIC_DATA_PATH) / f"{st.session_state.current_site_id}/week_profile_{st.session_state.current_site_id}.html"
+            if week_profile_path.exists():
+                st.markdown("#### Week Profile Graph")
+                st.components.v1.html(week_profile_path.read_text(), height=500,width = 1200, scrolling=True)
+            else:
+                st.warning("Week Profile graph not found.")
+        
+        
+        with tab3:
             st.subheader("Raw JSON Data")
             
             # Pretty print JSON
@@ -298,6 +370,10 @@ def main():
                 file_name=f"site_{st.session_state.current_site_id}.json",
                 mime="application/json"
             )
+
+        
+
+    
     
     # Footer
     st.divider()
