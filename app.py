@@ -294,13 +294,10 @@ def main():
                  # Inject custom CSS for legend styling
                 custom_css = """
                 <style>
-                .legend text {
-                    font-size: 10px !important;
-                }
-                .legendtext {
-                    max-width: 150px !important;
-                    overflow: hidden !important;
-                    text-overflow: ellipsis !important;
+                .legend {
+                    overflow: visible !important;
+                    white-space: normal !important;
+                    word-wrap: break-word !important;
                 }
                 </style>
                 """
@@ -325,13 +322,10 @@ def main():
                  # Inject custom CSS for legend styling
                 custom_css = """
                 <style>
-                .legend text {
-                    font-size: 10px !important;
-                }
-                .legendtext {
-                    max-width: 150px !important;
-                    overflow: hidden !important;
-                    text-overflow: ellipsis !important;
+                .legend {
+                    overflow: visible !important;
+                    white-space: normal !important;
+                    word-wrap: break-word !important;
                 }
                 </style>
                 """
@@ -348,10 +342,37 @@ def main():
             else:
                 st.warning("Seasonal Variation graph not found.")
 
-            week_profile_path = Path(GRAPHIC_DATA_PATH) / f"{st.session_state.current_site_id}/week_profile_{st.session_state.current_site_id}.html"
+            week_profile_path = Path(GRAPHIC_DATA_PATH) / f"{st.session_state.current_site_id}/Week_profile_{st.session_state.current_site_id}.html"
             if week_profile_path.exists():
                 st.markdown("#### Week Profile Graph")
-                st.components.v1.html(week_profile_path.read_text(), height=500,width = 1200, scrolling=True)
+                
+                # Read and modify the HTML to add y-axis label
+                html_content = week_profile_path.read_text()
+                
+                # Inject JavaScript to update the y-axis title to "kWh"
+                y_axis_script = """
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Wait for Plotly to load
+                        setTimeout(function() {
+                            var plotDiv = document.querySelector('.plotly-graph-div');
+                            if (plotDiv && window.Plotly) {
+                                window.Plotly.relayout(plotDiv, {
+                                    'yaxis.title.text': 'Total consumption in kWh'
+                                });
+                            }
+                        }, 500);
+                    });
+                </script>
+                """
+                
+                # Inject the script before closing body tag
+                if "</body>" in html_content:
+                    html_content = html_content.replace("</body>", f"{y_axis_script}</body>")
+                else:
+                    html_content += y_axis_script
+                
+                st.components.v1.html(html_content, height=500, width=1200, scrolling=True)
             else:
                 st.warning("Week Profile graph not found.")
         
