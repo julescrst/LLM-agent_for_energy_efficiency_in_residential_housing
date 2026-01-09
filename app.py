@@ -10,6 +10,9 @@ import os
 from pathlib import Path
 import anthropic
 from datetime import datetime
+import time
+import random
+import hashlib
 
 # Page configuration
 st.set_page_config(
@@ -28,6 +31,12 @@ if 'current_site_id' not in st.session_state:
     st.session_state.current_site_id = None
 if 'initial_analysis_pending' not in st.session_state:
     st.session_state.initial_analysis_pending = False
+if 'render_counter' not in st.session_state:
+    st.session_state.render_counter = 0
+if "graphs_refresh" not in st.session_state:
+    st.session_state.graphs_refresh = 0
+
+
 
 # Configuration
 JSON_DATA_PATH = "analyzed_sites"  
@@ -196,6 +205,9 @@ def main():
         
         
         with tab1:
+            # Increment counter to ensure graphs in tab2 get fresh rendering
+            st.session_state.render_counter += 1
+            
             st.subheader(f"AI-Powered Analysis for Site {st.session_state.current_site_id}")
             
             
@@ -274,6 +286,7 @@ def main():
                     with st.chat_message("assistant"):
                         response = query_claude(data, user_question, st.session_state.current_site_id,display= True )
                         
+                        
                         if response:
                             # Add assistant response to history
                             st.session_state.conversation_history.append({
@@ -283,21 +296,68 @@ def main():
             
             
         with tab2:
+            # Increment counter when graphs tab is viewed to force fresh iframe rendering
+            st.session_state.render_counter += 1
+            
             st.subheader("Energy Usage Graphs")
+
+            if st.button("🔄 Refresh graphs"):
+                st.session_state.graphs_refresh += 1
+                st.rerun()
+
             
             # Display energy usage graphs
             peak_hour_path = Path(GRAPHIC_DATA_PATH) / f"{st.session_state.current_site_id}/peak_hour_load_{st.session_state.current_site_id}.html"
             if peak_hour_path.exists():
-                st.markdown("#### Peak Hour Load Graph") 
+                st.markdown("#### Peak Hour Load Graph")
+                
+                # Read the HTML content
                 html_content = peak_hour_path.read_text()
-
-                 # Inject custom CSS for legend styling
+                
+                # Inject custom CSS to fix legend display
                 custom_css = """
                 <style>
-                .legend {
+                /* Target Plotly's specific legend elements */
+                g.legend {
+                    transform: translate(calc(100% - 280px), 60px) !important;
+                }
+                .legendbox {
+                    fill: rgba(255, 255, 255, 0.95) !important;
+                    stroke: #ddd !important;
+                    stroke-width: 1px !important;
+                    rx: 6 !important;
+                    ry: 6 !important;
+                    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1)) !important;
+                }
+                .legend text {
+                    font-size: 8px !important;
+                    fill: #333 !important;
+                }
+                /* Alternative approach using CSS transforms */
+                .js-plotly-plot .plotly .legend {
+                    transform: translate(calc(100% - 260px), 50px) !important;
+                }
+                /* Ensure sufficient margin for repositioned legend and prevent cutoff */
+                .plot-container {
+                    padding-right: 300px !important;
                     overflow: visible !important;
-                    white-space: normal !important;
-                    word-wrap: break-word !important;
+                }
+                svg.main-svg {
+                    margin-right: 300px !important;
+                    overflow: visible !important;
+                }
+                /* Make sure the iframe container has enough width */
+                .plotly-graph-div {
+                    margin-right: 300px !important;
+                    overflow: visible !important;
+                }
+                /* Ensure legend text doesn't overflow */
+                .legend .legendtext {
+                    max-width: 150px !important;
+                    font-size: 8px !important;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis !important;
+                    white-space: nowrap !important;
                 }
                 </style>
                 """
@@ -307,36 +367,72 @@ def main():
                     html_content = html_content.replace("</head>", f"{custom_css}</head>")
                 else:
                     html_content = custom_css + html_content
-
-                st.components.v1.html(html_content, height=500,width=1200, scrolling=True)
+                
+                st.components.v1.html(html_content, height=500, width=1200, scrolling=True)
             else:
                 st.warning("Peak Hour Load graph not found.")
+
+
 
             seasonal_variation_path = Path(GRAPHIC_DATA_PATH) / f"{st.session_state.current_site_id}/Seasonal_load_profile_{st.session_state.current_site_id}.html"
             if seasonal_variation_path.exists():
                 st.markdown("#### Seasonal Variation Graph")
 
+                html_content = seasonal_variation_path.read_text(encoding="utf-8")
 
-                html_content = seasonal_variation_path.read_text()
-
-                 # Inject custom CSS for legend styling
                 custom_css = """
                 <style>
-                .legend {
+                /* Target Plotly's specific legend elements */
+                g.legend {
+                    transform: translate(calc(100% - 300px), 100px) !important;
+                }
+                .legendbox {
+                    fill: rgba(255, 255, 255, 0.95) !important;
+                    stroke: #ddd !important;
+                    stroke-width: 1px !important;
+                    rx: 6 !important;
+                    ry: 6 !important;
+                    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1)) !important;
+                }
+                .legend text {
+                    font-size: 8px !important;
+                    fill: #333 !important;
+                }
+                /* Alternative approach using CSS transforms */
+                .js-plotly-plot .plotly .legend {
+                    transform: translate(calc(100% - 430px), 60px) !important;
+                }
+                /* Ensure sufficient margin for repositioned legend and prevent cutoff */
+                .plot-container {
+                    padding-right: 300px !important;
                     overflow: visible !important;
-                    white-space: normal !important;
-                    word-wrap: break-word !important;
+                }
+                svg.main-svg {
+                    margin-right: 300px !important;
+                    overflow: visible !important;
+                }
+                /* Make sure the iframe container has enough width */
+                .plotly-graph-div {
+                    margin-right: 300px !important;
+                    overflow: visible !important;
+                }
+                /* Ensure legend text doesn't overflow */
+                .legend .legendtext {
+                    max-width: 150px !important;
+                    font-size: 8px !important;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis !important;
+                    white-space: nowrap !important;
                 }
                 </style>
                 """
-                
-                # Inject CSS before closing </head> or at the start of <body>
+
+                # Inject CSS in head AND at start of body for maximum reliability
                 if "</head>" in html_content:
-                    html_content = html_content.replace("</head>", f"{custom_css}</head>")
+                        html_content = html_content.replace("</head>", f"{custom_css}</head>")
+                
                 else:
-                    html_content = custom_css + html_content
-
-
+                        html_content = custom_css + html_content
 
                 st.components.v1.html(html_content, height=500, width=1200, scrolling=True)
             else:
@@ -346,31 +442,62 @@ def main():
             if week_profile_path.exists():
                 st.markdown("#### Week Profile Graph")
                 
-                # Read and modify the HTML to add y-axis label
-                html_content = week_profile_path.read_text()
-                
-                # Inject JavaScript to update the y-axis title to "kWh"
-                y_axis_script = """
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        // Wait for Plotly to load
-                        setTimeout(function() {
-                            var plotDiv = document.querySelector('.plotly-graph-div');
-                            if (plotDiv && window.Plotly) {
-                                window.Plotly.relayout(plotDiv, {
-                                    'yaxis.title.text': 'Total consumption in kWh'
-                                });
-                            }
-                        }, 500);
-                    });
-                </script>
+                html_content = week_profile_path.read_text(encoding="utf-8")
+
+                custom_css = """
+                <style>
+                /* Target Plotly's specific legend elements */
+                g.legend {
+                    transform: translate(calc(100% - 280px), 60px) !important;
+                }
+                .legendbox {
+                    fill: rgba(255, 255, 255, 0.95) !important;
+                    stroke: #ddd !important;
+                    stroke-width: 1px !important;
+                    rx: 6 !important;
+                    ry: 6 !important;
+                    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.1)) !important;
+                }
+                .legend text {
+                    font-size: 8px !important;
+                    fill: #333 !important;
+                }
+                /* Alternative approach using CSS transforms */
+                .js-plotly-plot .plotly .legend {
+                    transform: translate(calc(100% - 260px), 50px) !important;
+                }
+                /* Ensure sufficient margin for repositioned legend and prevent cutoff */
+                .plot-container {
+                    padding-right: 300px !important;
+                    overflow: visible !important;
+                }
+                svg.main-svg {
+                    margin-right: 300px !important;
+                    overflow: visible !important;
+                }
+                /* Make sure the iframe container has enough width */
+                .plotly-graph-div {
+                    margin-right: 300px !important;
+                    overflow: visible !important;
+                }
+                /* Ensure legend text doesn't overflow */
+                .legend .legendtext {
+                    max-width: 150px !important;
+                    font-size: 8px !important;
+                    overflow: hidden !important;
+                    text-overflow: ellipsis !important;
+                    white-space: nowrap !important;
+                }
+                </style>
                 """
                 
-                # Inject the script before closing body tag
-                if "</body>" in html_content:
-                    html_content = html_content.replace("</body>", f"{y_axis_script}</body>")
+                # Inject CSS in head AND at start of body for maximum reliability
+                if "</head>" in html_content:
+                    html_content = html_content.replace("</head>", f"{custom_css}</head>")
+                
                 else:
-                    html_content += y_axis_script
+                    html_content = custom_css + html_content
+                
                 
                 st.components.v1.html(html_content, height=500, width=1200, scrolling=True)
             else:
