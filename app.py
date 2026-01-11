@@ -368,9 +368,17 @@ def main():
                 else:
                     html_content = custom_css + html_content
                 
-                # Add unique comment to force refresh when button is clicked
-                unique_id = f"peak_{st.session_state.current_site_id}_{st.session_state.render_counter}_{st.session_state.graphs_refresh}"
-                html_content += f"<!-- Refresh ID: {unique_id} -->"
+                # Force iframe refresh for cloud environments by modifying body content
+                import time
+                timestamp = int(time.time() * 1000)  # milliseconds for uniqueness
+                unique_id = f"peak_{st.session_state.current_site_id}_{st.session_state.render_counter}_{st.session_state.graphs_refresh}_{timestamp}"
+                
+                # Add invisible div with unique ID to force iframe recreation
+                iframe_refresh_div = f'<div id="refresh-{unique_id}" style="display:none;"></div>'
+                if "<body>" in html_content:
+                    html_content = html_content.replace("<body>", f"<body>{iframe_refresh_div}")
+                else:
+                    html_content = iframe_refresh_div + html_content
                 
                 st.components.v1.html(html_content, height=500, width=1200, scrolling=True)
             else:
@@ -438,9 +446,17 @@ def main():
                 else:
                         html_content = custom_css + html_content
 
-                # Add unique comment to force refresh when button is clicked
-                unique_id = f"seasonal_{st.session_state.current_site_id}_{st.session_state.render_counter}_{st.session_state.graphs_refresh}"
-                html_content += f"<!-- Refresh ID: {unique_id} -->"
+                # Force iframe refresh for cloud environments by modifying body content
+                import time
+                timestamp = int(time.time() * 1000)  # milliseconds for uniqueness
+                unique_id = f"seasonal_{st.session_state.current_site_id}_{st.session_state.render_counter}_{st.session_state.graphs_refresh}_{timestamp}"
+                
+                # Add invisible div with unique ID to force iframe recreation
+                iframe_refresh_div = f'<div id="refresh-{unique_id}" style="display:none;"></div>'
+                if "<body>" in html_content:
+                    html_content = html_content.replace("<body>", f"<body>{iframe_refresh_div}")
+                else:
+                    html_content = iframe_refresh_div + html_content
 
                 st.components.v1.html(html_content, height=500, width=1200, scrolling=True)
             else:
@@ -506,9 +522,17 @@ def main():
                 else:
                     html_content = custom_css + html_content
                 
-                # Add unique comment to force refresh when button is clicked
-                unique_id = f"week_{st.session_state.current_site_id}_{st.session_state.render_counter}_{st.session_state.graphs_refresh}"
-                html_content += f"<!-- Refresh ID: {unique_id} -->"
+                # Force iframe refresh for cloud environments by modifying body content
+                import time
+                timestamp = int(time.time() * 1000)  # milliseconds for uniqueness
+                unique_id = f"week_{st.session_state.current_site_id}_{st.session_state.render_counter}_{st.session_state.graphs_refresh}_{timestamp}"
+                
+                # Add invisible div with unique ID to force iframe recreation
+                iframe_refresh_div = f'<div id="refresh-{unique_id}" style="display:none;"></div>'
+                if "<body>" in html_content:
+                    html_content = html_content.replace("<body>", f"<body>{iframe_refresh_div}")
+                else:
+                    html_content = iframe_refresh_div + html_content
                 
                 st.components.v1.html(html_content, height=500, width=1200, scrolling=True)
             else:
