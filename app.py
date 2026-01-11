@@ -335,7 +335,7 @@ def main():
                 }
                 /* Alternative approach using CSS transforms */
                 .js-plotly-plot .plotly .legend {
-                    transform: translate(calc(100% - 260px), 50px) !important;
+                    transform: translate(calc(100% - 300px), 50px) !important;
                 }
                 /* Ensure sufficient margin for repositioned legend and prevent cutoff */
                 .plot-container {
@@ -367,6 +367,10 @@ def main():
                     html_content = html_content.replace("</head>", f"{custom_css}</head>")
                 else:
                     html_content = custom_css + html_content
+                
+                # Add unique comment to force refresh when button is clicked
+                unique_id = f"peak_{st.session_state.current_site_id}_{st.session_state.render_counter}_{st.session_state.graphs_refresh}"
+                html_content += f"<!-- Refresh ID: {unique_id} -->"
                 
                 st.components.v1.html(html_content, height=500, width=1200, scrolling=True)
             else:
@@ -400,7 +404,7 @@ def main():
                 }
                 /* Alternative approach using CSS transforms */
                 .js-plotly-plot .plotly .legend {
-                    transform: translate(calc(100% - 430px), 60px) !important;
+                    transform: translate(calc(100% - 500px), 60px) !important;
                 }
                 /* Ensure sufficient margin for repositioned legend and prevent cutoff */
                 .plot-container {
@@ -433,6 +437,10 @@ def main():
                 
                 else:
                         html_content = custom_css + html_content
+
+                # Add unique comment to force refresh when button is clicked
+                unique_id = f"seasonal_{st.session_state.current_site_id}_{st.session_state.render_counter}_{st.session_state.graphs_refresh}"
+                html_content += f"<!-- Refresh ID: {unique_id} -->"
 
                 st.components.v1.html(html_content, height=500, width=1200, scrolling=True)
             else:
@@ -498,6 +506,9 @@ def main():
                 else:
                     html_content = custom_css + html_content
                 
+                # Add unique comment to force refresh when button is clicked
+                unique_id = f"week_{st.session_state.current_site_id}_{st.session_state.render_counter}_{st.session_state.graphs_refresh}"
+                html_content += f"<!-- Refresh ID: {unique_id} -->"
                 
                 st.components.v1.html(html_content, height=500, width=1200, scrolling=True)
             else:
