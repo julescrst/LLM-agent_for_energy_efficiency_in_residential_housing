@@ -302,7 +302,14 @@ def main():
             st.subheader("Energy Usage Graphs")
 
             if st.button("🔄 Refresh graphs"):
+                # Clear any cached data and force complete refresh
                 st.session_state.graphs_refresh += 1
+                st.session_state.render_counter += 10  # Bigger increment to ensure uniqueness
+                
+                # Clear the cached JSON data to force reload from disk
+                load_json_file.clear()
+                
+                # Also clear any browser cache by adding cache-busting parameters
                 st.rerun()
 
             
@@ -311,8 +318,9 @@ def main():
             if peak_hour_path.exists():
                 st.markdown("#### Peak Hour Load Graph")
                 
-                # Read the HTML content
-                html_content = peak_hour_path.read_text()
+                # Read the HTML content fresh (no caching)
+                with open(peak_hour_path, 'r', encoding='utf-8') as f:
+                    html_content = f.read()
                 
                 # Inject custom CSS to fix legend display
                 custom_css = """
@@ -390,7 +398,9 @@ def main():
             if seasonal_variation_path.exists():
                 st.markdown("#### Seasonal Variation Graph")
 
-                html_content = seasonal_variation_path.read_text(encoding="utf-8")
+                # Read the HTML content fresh (no caching)
+                with open(seasonal_variation_path, 'r', encoding='utf-8') as f:
+                    html_content = f.read()
 
                 custom_css = """
                 <style>
@@ -466,7 +476,9 @@ def main():
             if week_profile_path.exists():
                 st.markdown("#### Week Profile Graph")
                 
-                html_content = week_profile_path.read_text(encoding="utf-8")
+                # Read the HTML content fresh (no caching)
+                with open(week_profile_path, 'r', encoding='utf-8') as f:
+                    html_content = f.read()
 
                 custom_css = """
                 <style>
