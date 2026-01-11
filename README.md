@@ -99,36 +99,25 @@ python Site_analysis.py --list
 python Site_analysis.py --all
 ```
 
-## 📈 Data Processing Pipeline
+## Data Processing Pipeline
 
 The analysis pipeline includes:
 
 1. **Data Loading**: Reads 60-minute interval smart meter data
-2. **Pattern Detection**: Identifies peak hours, seasonal trends, and weekly patterns and more
+2. **Site analysis**: Identifies peak hours, seasonal trends, and weekly patterns and more
 3. **ML Clustering**: Uses K-means to segment houses into consumption profiles
 4. **Comparative Analysis**: Benchmarks against state averages
 5. **Visualization Generation**: Creates interactive Plotly graphs
-6. **AI Insights**: Generates personalized recommendations using Claude LLM
-
-## 🧠 AI Features
-
-- **Natural Language Queries**: Ask questions like "What are my peak consumption hours?"
-- **Contextual Recommendations**: AI analyzes patterns and provides actionable advice
-- **Comparative Insights**: Explains how consumption compares to similar households
-- **Energy Efficiency Tips**: Suggests specific improvements based on usage patterns
+6. **Creates folder containing .json file with analysis summary and graphs**
 
 
-## 📊 Sample Data
+## Sample Data
 
-The system includes analysis for 236 residential sites with features like:
-- Hourly energy consumption patterns
-- Temperature correlation analysis
-- Peak demand identification
-- Seasonal variation tracking
-- Customer segmentation profiles
+The database contains 236 sites processed from data collected by NAAEA over 2024 in four different states
+(MT,OR,ID,WA)
 
 
-## 📝 License
+## License
 
 This project is part of an EPFL Semester Project (MA3) focused on energy efficiency analysis.
 
