@@ -22,6 +22,8 @@ An intelligent LLM-driven agent that analyzes smart meter data to provide person
 ```
 ├── app.py                    # Main Streamlit web application 
 ├── Site_analysis.py         # Core analysis engine and data processing (all the files in analyzed_sites were created with this script)
+├── site_comparison_analysis_60min.ipynb #Notebook showing evolution of work and visualization of model for site comparison
+├── site_specific_analysis_60min.ipynb # Notebook showing evolution of work and visualization for site specific analysis
 ├── analyzed_sites/          # Processed data for 236+ residential sites
 │   ├── [site_id]/
 │   │   ├── site_analysis_[id].json           # Analysis data
